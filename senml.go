@@ -1,9 +1,9 @@
 package senml
-
 import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"sort"
 
 	"github.com/fxamacker/cbor/v2"
@@ -140,10 +140,10 @@ func replaceInvalidCharacters(name string) string {
 // The base fields apply to the entries in the Record and also to all Records after
 // it up to, but not including, the next Record that has that same base field.
 func Normalize(p Pack) (Pack, error) {
-	for i, r := range p.Records {
+	for _, r := range p.Records {
 		r.Name = replaceInvalidCharacters(r.Name)
 	}
-	
+
 	// Validate ensures that all the BaseVersions are equal.
 	if err := Validate(p); err != nil {
 		return Pack{}, err
@@ -167,7 +167,7 @@ func Normalize(p Pack) (Pack, error) {
 		if len(r.BaseName) > 0 {
 			bname = r.BaseName
 		}
-		r.Name = bname + r.Name
+		r.Name = replaceInvalidCharacters(bname + r.Name)
 		r.Time = btime + r.Time
 		if r.Sum != nil {
 			*r.Sum = bsum + *r.Sum
@@ -223,7 +223,7 @@ func Validate(p Pack) error {
 		if len(name) == 0 {
 			return ErrEmptyName
 		}
-		
+
 		var valCnt int
 		if r.Value != nil {
 			valCnt++
@@ -258,10 +258,10 @@ func validateName(name string) error {
 	if (l == '-') || (l == ':') || (l == '.') || (l == '/') || (l == '_') {
 		return ErrBadChar
 	}
-	for _, l := range name {
-		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
-			return ErrBadChar
-		}
-	}
+	//for _, l := range name {
+	//	if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
+	//		return ErrBadChar
+	//	}
+	//}
 	return nil
 }
