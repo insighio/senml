@@ -3,7 +3,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"sort"
 
 	"github.com/fxamacker/cbor/v2"
