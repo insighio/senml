@@ -125,6 +125,17 @@ func Encode(p Pack, format Format) ([]byte, error) {
 	}
 }
 
+func replaceInvalidCharacters(name string) string {
+	out := []rune(name)
+	for pos, l := range name {
+		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
+			out[pos] = '_'
+		}
+	}
+
+	return string(out)
+}
+
 // Normalize removes all the base values and expands records values with the base items.
 // The base fields apply to the entries in the Record and also to all Records after
 // it up to, but not including, the next Record that has that same base field.
@@ -152,7 +163,7 @@ func Normalize(p Pack) (Pack, error) {
 		if len(r.BaseName) > 0 {
 			bname = r.BaseName
 		}
-		r.Name = bname + r.Name
+		r.Name = replaceInvalidCharacters(bname + r.Name)
 		r.Time = btime + r.Time
 		if r.Sum != nil {
 			*r.Sum = bsum + *r.Sum
@@ -182,17 +193,6 @@ func Normalize(p Pack) (Pack, error) {
 	return p, nil
 }
 
-func replaceInvalidCharacters(name string) string {
-	out := []rune(name)
-	for pos, l := range name {
-		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
-			out[pos] = '_'
-		}
-	}
-
-	return string(out)
-}
-
 // Validate validates SenML records.
 func Validate(p Pack) error {
 	var bver uint
@@ -219,8 +219,6 @@ func Validate(p Pack) error {
 		if len(name) == 0 {
 			return ErrEmptyName
 		}
-
-		r.Name = replaceInvalidCharacters(name)
 		
 		var valCnt int
 		if r.Value != nil {
