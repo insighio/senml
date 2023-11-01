@@ -220,7 +220,7 @@ func Validate(p Pack) error {
 			return ErrEmptyName
 		}
 
-		r.Name := replaceInvalidCharacters(name)
+		r.Name = replaceInvalidCharacters(name)
 		
 		var valCnt int
 		if r.Value != nil {
@@ -256,7 +256,7 @@ func validateName(name string) error {
 	if (l == '-') || (l == ':') || (l == '.') || (l == '/') || (l == '_') {
 		return ErrBadChar
 	}
-	for pos, l := range name {
+	for _, l := range name {
 		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
 			return ErrBadChar
 		}
