@@ -182,6 +182,17 @@ func Normalize(p Pack) (Pack, error) {
 	return p, nil
 }
 
+func replaceInvalidCharacters(name string) string {
+	out := []rune(name)
+	for pos, l := range name {
+		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
+			out[pos] = '_'
+		}
+	}
+
+	return string(out)
+}
+
 // Validate validates SenML records.
 func Validate(p Pack) error {
 	var bver uint
@@ -208,6 +219,9 @@ func Validate(p Pack) error {
 		if len(name) == 0 {
 			return ErrEmptyName
 		}
+
+		r.Name := replaceInvalidCharacters(name)
+		
 		var valCnt int
 		if r.Value != nil {
 			valCnt++
@@ -242,7 +256,7 @@ func validateName(name string) error {
 	if (l == '-') || (l == ':') || (l == '.') || (l == '/') || (l == '_') {
 		return ErrBadChar
 	}
-	for _, l := range name {
+	for pos, l := range name {
 		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
 			return ErrBadChar
 		}
