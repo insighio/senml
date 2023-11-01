@@ -254,10 +254,10 @@ func validateName(name string) error {
 	if (l == '-') || (l == ':') || (l == '.') || (l == '/') || (l == '_') {
 		return ErrBadChar
 	}
-	for _, l := range name {
-		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
-			return ErrBadChar
-		}
-	}
+//	for _, l := range name {
+//		if (l < 'a' || l > 'z') && (l < 'A' || l > 'Z') && (l < '0' || l > '9') && (l != '-') && (l != ':') && (l != '.') && (l != '/') && (l != '_') {
+//			return ErrBadChar
+//		}
+//	}
 	return nil
 }
