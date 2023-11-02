@@ -1,4 +1,4 @@
-module github.com/mainflux/senml
+module github.com/insighio/senml
 
 go 1.13
 

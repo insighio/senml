@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/mainflux/senml"
+	"github.com/insighio/senml"
 	"github.com/stretchr/testify/assert"
 )
 
